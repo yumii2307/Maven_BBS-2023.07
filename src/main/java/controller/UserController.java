@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 /**
  * Servlet implementation class UserController
@@ -31,6 +32,22 @@ public class UserController extends HttpServlet {
 				rd.forward(request, response);
 			} else {
 				
+			}
+			break;
+		case "register":
+			if (request.getMethod().equals("GET")) {
+				rd = request.getRequestDispatcher("/WEB-INF/view/user/register.jsp");
+				rd.forward(request, response);
+			} else {
+				String uid = request.getParameter("uid");
+				Part filePart = request.getPart("profile");
+				String filename = filePart.getSubmittedFileName();
+				int dotPosition = filename.indexOf(".");
+				String firstPart = filename.substring(0, dotPosition);
+				filename = filename.replace(firstPart, uid);
+				filePart.write(PROFILE_PATH + filename);
+				
+				response.sendRedirect("/bbs/user/login");
 			}
 			break;
 		}
