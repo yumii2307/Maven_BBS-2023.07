@@ -13,6 +13,17 @@ public class User {
 	private String addr;
 	
 	public User() { }
+	
+	// Update 할 경우 사용
+	public User(String uid, String uname, String email, String profile, String addr) {
+		super();
+		this.uid = uid;
+		this.uname = uname;
+		this.email = email;
+		this.profile = profile;
+		this.addr = addr;
+	}
+	// Insert 할 경우 사용
 	public User(String uid, String pwd, String uname, String email, String profile, String addr) {
 		this.uid = uid;
 		this.pwd = pwd;
