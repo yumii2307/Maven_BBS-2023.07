@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,8 @@ import utility.UserService;
  */
 @WebServlet("/user/*")
 @MultipartConfig(
-		fileSizeThreshold = 1024 * 1024 * 1,
-		maxFileSize = 1024 * 1024 * 10,
+		fileSizeThreshold = 1024 * 1024 * 1,		// 1 MB
+		maxFileSize = 1024 * 1024 * 10,				// 10 MB
 		maxRequestSize = 1024 * 1024 * 10
 )
 public class UserController extends HttpServlet {
@@ -54,9 +55,8 @@ public class UserController extends HttpServlet {
 			int totalPages = (int) Math.ceil(totalUsers / 10.);
 			session.setAttribute("currentUserPage", page);
 			List<String> pageList = new ArrayList<>();
-			for (int i = 1; 1 <= totalPages; i++) {
+			for (int i = 1; i <= totalPages; i++)
 				pageList.add(String.valueOf(i));
-			}
 			request.setAttribute("pageList", pageList);
 			
 			rd = request.getRequestDispatcher("/WEB-INF/view/user/list.jsp");
@@ -80,7 +80,7 @@ public class UserController extends HttpServlet {
 					session.setAttribute("profile", user.getProfile());
 					
 					// 환영 메세지
-					request.setAttribute("msg", user.getUname() + " 님 환영합니다.");
+					request.setAttribute("msg", user.getUname() + "님 환영합니다.");
 					request.setAttribute("url", "/bbs/user/list?page=1");
 					rd = request.getRequestDispatcher("/WEB-INF/view/common/alertMsg.jsp");
 					rd.forward(request, response);
@@ -90,8 +90,8 @@ public class UserController extends HttpServlet {
 					rd = request.getRequestDispatcher("/WEB-INF/view/common/alertMsg.jsp");
 					rd.forward(request, response);
 				} else {		// UID_NOT_EXIST
-					request.setAttribute("msg", "일치하는 ID가 없습니다. 회원가입 페이지로 이동합니다.");
-					request.setAttribute("url", "bbs/user/register");
+					request.setAttribute("msg", "ID가 없습니다. 회원가입 페이지로 이동합니다.");
+					request.setAttribute("url", "/bbs/user/register");
 					rd = request.getRequestDispatcher("/WEB-INF/view/common/alertMsg.jsp");
 					rd.forward(request, response);
 				}
@@ -110,7 +110,7 @@ public class UserController extends HttpServlet {
 				filePart = request.getPart("profile");
 				addr = request.getParameter("addr");
 				
-				try {					
+				try {
 					filename = filePart.getSubmittedFileName();
 					int dotPosition = filename.indexOf(".");
 					String firstPart = filename.substring(0, dotPosition);
@@ -126,9 +126,8 @@ public class UserController extends HttpServlet {
 					request.setAttribute("url", "/bbs/user/register");
 					rd = request.getRequestDispatcher("/WEB-INF/view/common/alertMsg.jsp");
 					rd.forward(request, response);
-				// pwd != pwd2 --> 등록 화면
-				} else if (!pwd.equals(pwd2)) {
-					request.setAttribute("msg", "패스워드가 일치하지 않습니다.");
+				} else if (!pwd.equals(pwd2)) { 	// pwd != pwd2 --> 등록 화면
+					request.setAttribute("msg", "패스워드 입력이 잘못되었습니다.");
 					request.setAttribute("url", "/bbs/user/register");
 					rd = request.getRequestDispatcher("/WEB-INF/view/common/alertMsg.jsp");
 					rd.forward(request, response);
@@ -136,7 +135,7 @@ public class UserController extends HttpServlet {
 					String hashedPwd = BCrypt.hashpw(pwd, BCrypt.gensalt());
 					user = new User(uid, hashedPwd, uname, email, filename, addr);
 					uDao.insertUser(user);
-					request.setAttribute("msg", "사용자 등록을 마쳤습니다. 로그인 후 이용해주세요.");
+					request.setAttribute("msg", "등록을 마쳤습니다. 로그인하세요.");
 					request.setAttribute("url", "/bbs/user/login");
 					rd = request.getRequestDispatcher("/WEB-INF/view/common/alertMsg.jsp");
 					rd.forward(request, response);
@@ -159,10 +158,14 @@ public class UserController extends HttpServlet {
 				String oldFilename = request.getParameter("filename");
 				uname = request.getParameter("uname");
 				email = request.getParameter("email");
+				filePart = request.getPart("profile");
 				addr = request.getParameter("addr");
-				
-				try {					
+				try {
 					filename = filePart.getSubmittedFileName();
+					if (!(oldFilename == null || oldFilename.equals(""))) {
+						File oldFile = new File(PROFILE_PATH + oldFilename);
+						oldFile.delete();
+					}
 					int dotPosition = filename.indexOf(".");
 					String firstPart = filename.substring(0, dotPosition);
 					filename = filename.replace(firstPart, uid);
@@ -170,14 +173,18 @@ public class UserController extends HttpServlet {
 				} catch (Exception e) {
 					System.out.println("프로필 사진을 변경하지 않았습니다.");
 				}
+				filename = (filename == null) ? oldFilename : filename;
+				user = new User(uid, uname, email, filename, addr);
+				uDao.updateUser(user);
 				response.sendRedirect("/bbs/user/list?page=" + session.getAttribute("currentUserPage"));
 			}
+			break;
 		case "delete":
 			uid = request.getParameter("uid");
 			rd = request.getRequestDispatcher("/WEB-INF/view/user/delete.jsp?uid=" + uid);
 			rd.forward(request, response);
 			break;
-		case "deleteConfirm" :
+		case "deleteConfirm":
 			uid = request.getParameter("uid");
 			uDao.deleteUser(uid);
 			response.sendRedirect("/bbs/user/list?page=" + session.getAttribute("currentUserPage"));

@@ -6,8 +6,8 @@
 <head>
 	<%@ include file="../common/head.jspf" %>
 	<style>
-		th, td { text-align: center; }
-		.disabled-link { pointer-events: null;}
+		td, th	{ text-align: center; }
+		.disabled-link	{ pointer-events: none; }
 	</style>
 </head>
 <body>
@@ -19,7 +19,7 @@
         
         	<!-- ======================== main ======================== -->
         	<div class="col-sm-9">
-        		<h3><strong>사용자 정보 수정</strong></h3>
+        		<h3><strong>사용자 수정</strong></h3>
         		<hr>
         		<div class="row">
         			<div class="col-3"></div>
@@ -46,7 +46,7 @@
 			                    </tr>
 			                    <tr>
 			                        <td><label class="col-form-label">주소</label></td>
-			                        <td><input type="text" name="addr" class="form-control"  value="${user.addr}"></td>
+			                        <td><input type="text" name="addr" class="form-control" value="${user.addr}"></td>
 			                    </tr>
 			                    <tr>
 			                        <td colspan="2" style="text-align: center;">
@@ -58,7 +58,7 @@
 	                	</form>
         			</div>
         			<div class="col-3"></div>
-        		</div>
+        		</div>      		
         	</div>
         </div>
     </div>

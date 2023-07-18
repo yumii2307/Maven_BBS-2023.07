@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
 <html>
@@ -8,13 +8,13 @@
 <body>
 	<%@ include file="../common/top.jspf" %>
 	
-	<div class="container" style="margin-top: 80px;">
+    <div class="container" style="margin-top: 80px;">
         <div class="row">
         	<%@ include file="../common/aside.jspf" %>
         
         	<!-- ======================== main ======================== -->
-        	<div class="col-sm-9">
-        		<h3><strong>회원 탈퇴</strong></h3>
+			<div class="col-sm-9">
+        		<h3><strong>회원 삭제</strong></h3>
         		<hr>
         		<div class="row">
         			<div class="col-3"></div>
@@ -34,8 +34,8 @@
         		</div>
         	</div>
         </div>
-    </div>
-    
-    <%@ include file="../common/bottom.jspf" %>
+	</div>
+	
+	<%@ include file="../common/bottom.jspf" %>
 </body>
 </html>
