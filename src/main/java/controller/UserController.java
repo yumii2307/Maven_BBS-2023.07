@@ -162,20 +162,24 @@ public class UserController extends HttpServlet {
 				addr = request.getParameter("addr");
 				try {
 					filename = filePart.getSubmittedFileName();
+					int dotPosition = filename.indexOf(".");
 					if (!(oldFilename == null || oldFilename.equals(""))) {
 						File oldFile = new File(PROFILE_PATH + oldFilename);
 						oldFile.delete();
 					}
-					int dotPosition = filename.indexOf(".");
 					String firstPart = filename.substring(0, dotPosition);
 					filename = filename.replace(firstPart, uid);
 					filePart.write(PROFILE_PATH + filename);
 				} catch (Exception e) {
 					System.out.println("프로필 사진을 변경하지 않았습니다.");
 				}
-				filename = (filename == null) ? oldFilename : filename;
+				filename = (filename == null || filename.equals("")) ? oldFilename : filename;
 				user = new User(uid, uname, email, filename, addr);
 				uDao.updateUser(user);
+				session.setAttribute("uname", uname);
+				session.setAttribute("email", email);
+				session.setAttribute("addr", addr);
+				session.setAttribute("profile", filename);
 				response.sendRedirect("/bbs/user/list?page=" + session.getAttribute("currentUserPage"));
 			}
 			break;
