@@ -16,6 +16,7 @@ public class Board {
 	
 	// 기본 생성자
 	public Board() { }
+	
 	// 게시글 생성시 필요한 생성자
 	public Board(String uid, String title, String content, String files) {
 		this.uid = uid;
