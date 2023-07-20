@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet Filter implementation class BbsFilter
  */
-@WebFilter({"/board/*", "/user/list", "/user/logout",
+@WebFilter({"/board/*", "/reply/*", "/user/list", "/user/logout",
 						"/user/update", "/user/delete", "/user/deleteConfirm"})
 public class LoginCheckFilter extends HttpFilter implements Filter {
 
