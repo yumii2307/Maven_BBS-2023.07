@@ -38,7 +38,7 @@
                         <h6>글번호: ${board.bid} | ${fn:replace(board.modTime, 'T', ' ')}</h6>
                         <h6>첨부파일: 
                         <c:forEach var="file" items="${fileList}">
-                        	<a href="#" class="me-2" download>${file}</a>
+                        	<a href="/bbs/file/download?file=${file}" class="me-2" download>${file}</a>
                         </c:forEach>
                         </h6>
                     </div>

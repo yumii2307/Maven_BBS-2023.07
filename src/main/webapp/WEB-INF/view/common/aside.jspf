@@ -1,12 +1,21 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%-- <body> 좌측에 있는 aside menu --%>
 
 			<div class="col-sm-3">
-                <img src="/bbs/img/person.png" class="rounded-circle" alt="" width="90%">
-                <p class="mt-3">피할 수 없으면 즐겨라</p>
+			<c:if test="${empty profile}">
+				<img src="/bbs/img/person.png" class="rounded-circle" alt="" width="90%">
+			</c:if>
+			<c:if test="${not empty profile}">
+				<img src="/bbs/file/profile?file=${profile}" class="rounded-circle" alt="" width="90%">
+			</c:if>
+				<h2><strong>${uname}</strong></h2>
+                <p class="mt-3">피할수 없으면 즐겨라</p>
                 <div class="mt-5">
                     <i class="fa fa-envelope me-2"></i><a href="#">${email}</a><br>
                     <img src="/bbs/img/addr.png" height="16" class="me-2">${addr}<br>
                 </div>
-                <button class="btn btn-sm btn-outline-primary mt-3">Edit Profile</button>
+                <a href="/bbs/user/update?uid=${uid}">
+                	<button class="btn btn-sm btn-outline-primary mt-3">Edit Profile</button>
+                </a>
             </div>
