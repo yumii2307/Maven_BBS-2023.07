@@ -111,7 +111,7 @@ public class BoardController extends HttpServlet {
 				List<String> fileList = new ArrayList<String>();
 				for (Part part: fileParts) {
 					String filename = part.getSubmittedFileName();
-					if (filename == null)
+					if (filename == null || filename.equals(""))
 						continue;
 					
 					part.write(UPLOAD_PATH + filename);

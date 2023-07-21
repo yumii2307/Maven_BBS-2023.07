@@ -163,7 +163,7 @@ public class UserController extends HttpServlet {
 				try {
 					filename = filePart.getSubmittedFileName();
 					int dotPosition = filename.indexOf(".");
-					if (!(oldFilename == null || oldFilename.equals(""))) {
+					if (!(oldFilename == null || oldFilename.equals("")) && !(filename == null || filename.equals(""))) {
 						File oldFile = new File(PROFILE_PATH + oldFilename);
 						oldFile.delete();
 					}
