@@ -34,6 +34,7 @@
                 <hr>
                 <div class="row">
                     <div class="col-8">
+                    	<input type="hidden" name="bid" value="${board.bid}">
                         <h5>${board.title}</h5>
                         <h6>글번호: ${board.bid} | ${fn:replace(board.modTime, 'T', ' ')}</h6>
                         <h6>첨부파일: 
@@ -81,14 +82,14 @@
                             <input type="hidden" name="uid" value="${board.uid}">
                             <table class="table table-borderless mt-2">
                                 <tr class="d-flex">
-                                    <td class="col-1 text-end">
+                                    <td class="col-1 align-self-center">
                                         <label class="col-form-lable">댓글</label>
                                     </td>
-                                    <td class="col-9">
+                                    <td class="col-9 align-self-center">
                                         <textarea class="form-control" name="comment" rows="3"></textarea>
                                     </td>
-                                    <td class="col-1">
-                                        <button type="submit" class="btn btn-primary mt-4">등록</button>
+                                    <td class="col-1 align-self-center">
+                                        <button type="submit" class="btn btn-primary">등록</button>
                                     </td>
                                 </tr>
                             </table>

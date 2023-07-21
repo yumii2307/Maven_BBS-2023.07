@@ -139,4 +139,35 @@ public class BoardDao {
 			e.printStackTrace();
 		}
 	}
+	
+	public void updateBoard(Board board) {
+		Connection conn = getConnection();
+		String sql = "update board set title=?, content=?, modTime=now(), files=? where bid=?";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, board.getTitle());
+			pstmt.setString(2, board.getContent());
+			pstmt.setString(3, board.getFiles());
+			pstmt.setInt(4, board.getBid());
+			
+			pstmt.executeUpdate();
+			pstmt.close(); conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteBoard(int bid) {
+		Connection conn = getConnection();
+		String sql = "update board set isDeleted=1 where bid=?";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bid);
+			
+			pstmt.executeUpdate();
+			pstmt.close(); conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

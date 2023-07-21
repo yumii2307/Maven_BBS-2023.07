@@ -25,9 +25,8 @@ public class Board {
 		this.files = files;
 	}
 	// 게시글 수정시 필요한 생성자
-	public Board(int bid, String uid, String title, String content, String files) {
+	public Board(int bid, String title, String content, String files) {
 		this.bid = bid;
-		this.uid = uid;
 		this.title = title;
 		this.content = content;
 		this.files = files;
