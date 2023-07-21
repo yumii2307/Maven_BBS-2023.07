@@ -194,7 +194,8 @@ public class UserController extends HttpServlet {
 			response.sendRedirect("/bbs/user/list?page=" + session.getAttribute("currentUserPage"));
 			break;
 		default:
-			System.out.println(request.getRequestURI() + " 잘못된 경로입니다.");
+			rd = request.getRequestDispatcher("/WEB-INF/view/error/error404.jsp");
+			rd.forward(request, response);
 		}
 	}
 
