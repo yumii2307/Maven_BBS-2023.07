@@ -20,6 +20,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import db.UserDao;
 import entity.User;
+import utility.AsideUtil;
 import utility.UserService;
 
 /**
@@ -79,6 +80,13 @@ public class UserController extends HttpServlet {
 					session.setAttribute("email", user.getEmail());
 					session.setAttribute("addr", user.getAddr());
 					session.setAttribute("profile", user.getProfile());
+					
+					// 상태 메세지
+					// D:\JavaWorkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\bbs\WEB-INF/data/todayQuote.txt
+					String quoteFile = getServletContext().getRealPath("/") + "WEB-INF/data/todayQuote.txt";
+					AsideUtil au = new AsideUtil();
+					String stateMsg = au.getTodayQuote(quoteFile);
+					session.setAttribute("stateMsg", stateMsg);
 					
 					// 환영 메세지
 					request.setAttribute("msg", user.getUname() + "님 환영합니다.");
@@ -182,21 +190,20 @@ public class UserController extends HttpServlet {
 				if (pwd != null && pwd.length() > 1 && pwd.equals(pwd2)) {
 					hashedPwd = BCrypt.hashpw(pwd, BCrypt.gensalt());
 					pwdFlag = true;
-				}
+				} 
 				user = new User(uid, hashedPwd, uname, email, filename, addr);
 				uDao.updateUser(user);
 				session.setAttribute("uname", uname);
 				session.setAttribute("email", email);
 				session.setAttribute("addr", addr);
 				session.setAttribute("profile", filename);
-				if (pwdFlag) {					
-					request.setAttribute("msg", "패스워드 변경이 완료되었습니다.");
+				if (pwdFlag) {
+					request.setAttribute("msg", "패스워드가 변경이 되었습니다.");
 					request.setAttribute("url", "/bbs/user/list?page=" + session.getAttribute("currentUserPage"));
 					rd = request.getRequestDispatcher("/WEB-INF/view/common/alertMsg.jsp");
 					rd.forward(request, response);
-				} else {			
+				} else
 					response.sendRedirect("/bbs/user/list?page=" + session.getAttribute("currentUserPage"));
-				}
 			}
 			break;
 		case "delete":

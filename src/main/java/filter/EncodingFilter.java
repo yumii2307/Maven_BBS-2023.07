@@ -16,7 +16,8 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet Filter implementation class BbsFilter
  */
-@WebFilter({"/board/*", "/reply/*", "/user/*", "/file/*"})
+// @WebFilter("/*")
+@WebFilter({"/aside/*", "/board/*", "/file/*", "/reply/*", "/user/*"})
 public class EncodingFilter extends HttpFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

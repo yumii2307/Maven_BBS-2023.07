@@ -101,12 +101,14 @@ public class BoardController extends HttpServlet {
 			List<Reply> replyList = rDao.getReplyList(bid);
 			request.setAttribute("replyList", replyList);
 			
-			rd = request.getRequestDispatcher("/WEB-INF/view/board/detail.jsp");
+			// rd = request.getRequestDispatcher("/WEB-INF/view/board/detail.jsp");
+			rd = request.getRequestDispatcher("/WEB-INF/view/board/detailEditor.jsp");
 			rd.forward(request, response);
 			break;
 		case "write":
 			if (request.getMethod().equals("GET")) {
-				rd = request.getRequestDispatcher("/WEB-INF/view/board/write.jsp");
+				// rd = request.getRequestDispatcher("/WEB-INF/view/board/write.jsp");
+				rd = request.getRequestDispatcher("/WEB-INF/view/board/writeEditor.jsp");
 				rd.forward(request, response);
 			} else {
 				title = request.getParameter("title");
@@ -142,6 +144,7 @@ public class BoardController extends HttpServlet {
 					session.setAttribute("fileList", fileList);
 				}
 				rd = request.getRequestDispatcher("/WEB-INF/view/board/update.jsp");
+				rd = request.getRequestDispatcher("/WEB-INF/view/board/updateEditor.jsp");
 				rd.forward(request, response);
 			} else {
 				bid = Integer.parseInt(request.getParameter("bid"));
