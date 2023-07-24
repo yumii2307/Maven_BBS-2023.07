@@ -26,11 +26,20 @@
         			<div class="col-6">
         				<form action="/bbs/user/update" method="post" enctype="multipart/form-data">
         					<input type="hidden" name="uid" value="${user.uid}">
+        					<input type="hidden" name="hashedPwd" value="${user.pwd}">
         					<input type="hidden" name="filename" value="${user.profile}">
 	                		<table class="table table-borderless">
 	                			<tr>
 			                        <td style="width:35%"><label class="col-form-label">사용자 ID</label></td>
 			                        <td style="width:65%"><input type="text" class="form-control" value="${user.uid}" disabled></td>
+			                    </tr>
+			                    <tr>
+			                        <td><label class="col-form-label">패스워드</label></td>
+			                        <td><input type="password" name="pwd" class="form-control"></td>
+			                    </tr>
+			                    <tr>
+			                        <td><label class="col-form-label">패스워드 확인</label></td>
+			                        <td><input type="password" name="pwd2" class="form-control"></td>
 			                    </tr>
 			                    <tr>
 			                        <td><label class="col-form-label">이름</label></td>

@@ -22,6 +22,9 @@ import entity.Board;
 import entity.Reply;
 import utility.JsonUtil;
 
+/**
+ * Servlet implementation class BoardController
+ */
 @WebServlet("/board/*")
 @MultipartConfig(
 		fileSizeThreshold = 1024 * 1024 * 1,		// 1 MB
@@ -46,8 +49,8 @@ public class BoardController extends HttpServlet {
 		RequestDispatcher rd = null;
 		int bid = 0, page = 0;
 		String title = null, content = null, files = null, uid = null;
-		Board board = null;
 		List<String> fileList = null;
+		Board board = null;
 		switch (action) {
 		case "list":
 			String page_ = request.getParameter("p");
@@ -84,10 +87,10 @@ public class BoardController extends HttpServlet {
 			bid = Integer.parseInt(request.getParameter("bid"));
 			uid = request.getParameter("uid");
 			String option = request.getParameter("option");
-			// 본인이 조회한 경우 또는 댓글 작성 후에는 조회수를 증가시키지 않음
-			if (!uid.equals(sessionUid) && (option == null || option.equals(""))) {
+			// 본인이 조회한 경우 또는 댓글 작성후에는 조회수를 증가시키지 않음
+			if (!uid.equals(sessionUid) && (option==null || option.equals("")))
 				bDao.increaseViewCount(bid);
-			}
+			
 			board = bDao.getBoard(bid);
 			String jsonFiles = board.getFiles();
 			if (!(jsonFiles == null || jsonFiles.equals(""))) {
@@ -126,51 +129,56 @@ public class BoardController extends HttpServlet {
 				response.sendRedirect("/bbs/board/list?p=1&f=&q=");
 			}
 			break;
-		case "update":
+		case "update":	
 			if (request.getMethod().equals("GET")) {
 				bid = Integer.parseInt(request.getParameter("bid"));
 				board = bDao.getBoard(bid);
+				board.setTitle(board.getTitle().replace("\"", "&quot;"));
 				request.setAttribute("board", board);
-				fileList = ju.jsonToList(board.getFiles());
-				session.setAttribute("fileList", fileList);
+				
+				String uploadedFiles = board.getFiles().trim();
+				if (uploadedFiles != null && uploadedFiles.contains("list")) {
+					fileList = ju.jsonToList(uploadedFiles);
+					session.setAttribute("fileList", fileList);
+				}
 				rd = request.getRequestDispatcher("/WEB-INF/view/board/update.jsp");
 				rd.forward(request, response);
 			} else {
 				bid = Integer.parseInt(request.getParameter("bid"));
 				title = request.getParameter("title");
 				content = request.getParameter("content");
+				
 				fileList = (List<String>) session.getAttribute("fileList");
 				if (fileList != null && fileList.size() > 0) {
 					String[] delFiles = request.getParameterValues("delFile");
 					if (delFiles != null && delFiles.length > 0) {
 						for (String delFile: delFiles) {
-							fileList.remove(delFile);					// fileList에서 삭제
+							fileList.remove(delFile);			// fileList에서 삭제
 							File df = new File(UPLOAD_PATH + delFile);	// 실제 파일 삭제
 							df.delete();
 						}
-					}			
+					}
 				} else {
-					fileList = new ArrayList<>();
+					fileList = new ArrayList<String>();
 				}
 				List<Part> fileParts = (List<Part>) request.getParts();
-				
 				for (Part part: fileParts) {
 					String filename = part.getSubmittedFileName();
 					if (filename == null || filename.equals(""))
 						continue;
+					
 					part.write(UPLOAD_PATH + filename);
 					fileList.add(filename);
 				}
 				files = ju.listToJson(fileList);
+				
 				board = new Board(bid, title, content, files);
 				bDao.updateBoard(board);
-				response.sendRedirect("/bbs/board/detail?bid=" + bid + "&uid=" + sessionUid + "&option=DNI");
+				response.sendRedirect("/bbs/board/detail?bid=" + bid + "&uid=" + sessionUid);
 			}
 			break;
 		case "delete":
 			bid = Integer.parseInt(request.getParameter("bid"));
-			board = bDao.getBoard(bid);
-			request.setAttribute("board", board);
 			rd = request.getRequestDispatcher("/WEB-INF/view/board/delete.jsp?bid=" + bid);
 			rd.forward(request, response);
 			break;
@@ -183,5 +191,6 @@ public class BoardController extends HttpServlet {
 			rd = request.getRequestDispatcher("/WEB-INF/view/error/error404.jsp");
 			rd.forward(request, response);
 		}
-	}	
+	}
+	
 }

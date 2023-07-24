@@ -2,6 +2,7 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -155,7 +156,10 @@ public class UserController extends HttpServlet {
 				rd.forward(request, response);
 			} else {
 				uid = request.getParameter("uid");
+				String hashedPwd = request.getParameter("hashedPwd");
 				String oldFilename = request.getParameter("filename");
+				pwd = request.getParameter("pwd");
+				pwd2 = request.getParameter("pwd2");
 				uname = request.getParameter("uname");
 				email = request.getParameter("email");
 				filePart = request.getPart("profile");
@@ -174,13 +178,25 @@ public class UserController extends HttpServlet {
 					System.out.println("프로필 사진을 변경하지 않았습니다.");
 				}
 				filename = (filename == null || filename.equals("")) ? oldFilename : filename;
-				user = new User(uid, uname, email, filename, addr);
+				boolean pwdFlag = false;
+				if (pwd != null && pwd.length() > 1 && pwd.equals(pwd2)) {
+					hashedPwd = BCrypt.hashpw(pwd, BCrypt.gensalt());
+					pwdFlag = true;
+				}
+				user = new User(uid, hashedPwd, uname, email, filename, addr);
 				uDao.updateUser(user);
 				session.setAttribute("uname", uname);
 				session.setAttribute("email", email);
 				session.setAttribute("addr", addr);
 				session.setAttribute("profile", filename);
-				response.sendRedirect("/bbs/user/list?page=" + session.getAttribute("currentUserPage"));
+				if (pwdFlag) {					
+					request.setAttribute("msg", "패스워드 변경이 완료되었습니다.");
+					request.setAttribute("url", "/bbs/user/list?page=" + session.getAttribute("currentUserPage"));
+					rd = request.getRequestDispatcher("/WEB-INF/view/common/alertMsg.jsp");
+					rd.forward(request, response);
+				} else {			
+					response.sendRedirect("/bbs/user/list?page=" + session.getAttribute("currentUserPage"));
+				}
 			}
 			break;
 		case "delete":
